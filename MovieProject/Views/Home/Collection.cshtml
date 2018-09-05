@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "Collection";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    function InputCollection(data) {
+        $('#error-fieldcollection').text('');
+        if (data.status == 0) {
+            $('#error-fieldcollection').text(data.message).fadeIn('slow');
+            //$('#password').val();
+        } else if (data.status == 1) {
+            document.location.href = "/Home/Collection";
+        }
+    }
+</script>
+
+<main role="main">
+    <div class="col-sm-2 col-sm-offset-10" style="float:right">
+        <a class="btn btn-primary" data-toggle="modal" data-target="#InsertCollection">+Collection</a>
+    </div>
+
+    <!-- Modal Insert Collection -->
+    @using (Ajax.BeginForm("Collection", "Home", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        OnSuccess = "InputCollection"
+    }))
+    {
+    <div class="modal fade" id="InsertCollection" tabindex="-1" role="dialog" aria-labelledby="InsertModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="InsertModalLabel">Insert Movie</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form name="insertcollection" data-ajax="true" id="form" method="POST" data-ajax-success="InputCollection">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="Movie">Movie</label>
+                            <select class="form-control" id="moviecol" name="moviecol">
+                                <option value="0">-- Select Movie--</option>
+                                @foreach (var moviecollection in (List<MovieProject.Models.Movie>)ViewBag.MovieCollectionData)
+                                {
+                                    <option value="@moviecollection.MovieID">@moviecollection.MovieName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <p class="error-fieldcollection" id="error-fieldcollection" style="color:red"></p>
+                        <input type="submit" name="submit" class="btn btn-primary" value="Submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!--Modal Detail Collection-->
+    @using (Ajax.BeginForm("DetailCollection", "Home", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        OnSuccess = "InputCollection"
+    }))
+    {
+    <div class="modal fade" id="DetailCollection" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="InsertModalLabel">[ User Name ]</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form name="insertcollection" data-ajax="true" id="form" method="POST" data-ajax-success="InputCollection">
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!--Collection List-->
+    <h2>My Collection</h2>
+    @if (Session["UserName"] != null)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th align="center">Movie</th>
+                        <th align="center">Year Release</th>
+                        <th align="center">Created on Collection</th>
+                        <th align="center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var collection in (List<MovieProject.Models.Collection>)ViewBag.CollectionData)
+                    {
+                        <tr>
+                            <td>@collection.Movie.MovieName</td>
+                            <td>@collection.Movie.ReleaseYear</td>
+                            <td>@collection.CreatedOnCollection</td>
+                            <td>@Html.ActionLink("Delete", "DeleteCollection", new { collectionid = collection.CollectionID }, new { @class = "btn btn-primary" })</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</main>

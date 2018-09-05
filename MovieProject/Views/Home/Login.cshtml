@@ -1,0 +1,57 @@
+﻿
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../../../favicon.ico">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script type="text/javascript" src="../js/javascript.js"></script>
+<link href="~/css/style.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="~/Scripts/jquery-1.8.0.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<script>
+    //function js + jquery
+    function LoginHandle(data) {
+        $('#error-field').text('');
+        if (data.status == 0) {
+            $('#error-field').text(data.message).fadeIn('slow');
+            //$('#password').val();
+        } else if (data.status == 1){
+            document.location.href = "/Home/Index";
+        }
+    }
+</script>
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<body class="text-center">
+
+    @using (Ajax.BeginForm("Login", "Home", new AjaxOptions
+    {
+        HttpMethod = "POST",
+        OnSuccess = "LoginHandle"
+    }))
+    {
+        <form method="post" data-ajax="true" id="loginform" class="form" data-ajax-success="LoginHandel">
+            <h2>Please Sign In</h2>
+            <label for="inputUserName">User Name</label>
+            <div id="username">
+                @Html.TextBox("username")
+            </div>
+
+            <label for="inputPassword">Password</label>
+            <div id="pwd">
+                @Html.Password("pwd")
+            </div>
+            <input type="submit" value="Login" onclick="LoginHandle()" />
+
+        </form>
+        <div>
+            <p class="error-field" id="error-field"></p>
+        </div>
+    }  
+</body>
